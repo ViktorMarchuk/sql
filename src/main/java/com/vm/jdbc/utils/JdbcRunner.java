@@ -1,26 +1,29 @@
 package com.vm.jdbc.utils;
 
 
+import com.vm.jdbc.dao.TicketDao;
+import com.vm.jdbc.entity.Ticket;
+
+import java.math.BigDecimal;
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class JdbcRunner {
     public static void main(String[] args) throws SQLException {
-//        String sql = """
-//                select * from flight  ;
-//                """;
-//        try (Connection connection = ConnectionManager.get()) {
-//            Statement statement = connection.createStatement();
-//            ResultSet result = statement.executeQuery(sql);
-//            while (result.next()) {
-//                System.out.println(result.getObject("status"));
-//            }
-//        }
-          System.out.println(getTicketsByFlightId(141L));
+        var ticketDao = TicketDao.getInstance();
+//        ticketDao.save(new Ticket
+//                (43L, "Ol74664", "Skott", 23L, 18, BigDecimal.valueOf(46.3)));
+
+//        ticketDao.delete(111l);
+
+
+//          System.out.println(getTicketsByFlightId(141L));
 //        System.out.println(getFlightsBetween(LocalDate.of(2023, 12, 04).atStartOfDay(),
 //                LocalDate.of(2023, 12, 16).atStartOfDay()));
+       // System.out.println(ticketDao.getTicket());
     }
 
     public static List<String> getTicketsByFlightId(Long flightId) throws SQLException {
@@ -47,8 +50,8 @@ public class JdbcRunner {
             try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
                 Timestamp timestampStart = Timestamp.valueOf(start);
                 Timestamp timestampEnd = Timestamp.valueOf(end);
-                preparedStatement.setTimestamp(1,timestampStart);
-                preparedStatement.setTimestamp(2,timestampEnd);
+                preparedStatement.setTimestamp(1, timestampStart);
+                preparedStatement.setTimestamp(2, timestampEnd);
                 ResultSet resultSet = preparedStatement.executeQuery();
                 while (resultSet.next()) {
                     flightBeetwen.add(resultSet.getString(2));
