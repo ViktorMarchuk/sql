@@ -12,9 +12,5 @@ public interface Dao<K, E> {
 
     boolean delete(K id);
 
-    Optional<E> findById(Long id);
-
-    boolean delete(Long id);
-
     E save(E e);
 }

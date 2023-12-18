@@ -14,8 +14,7 @@ public class Ticket {
     public Ticket() {
     }
 
-    public Ticket(Long id, String passportNumber, String name,
-                  Long flightId, int seat, BigDecimal cost) {
+    public Ticket(Long id, String passportNumber, String name, Long flightId, int seat, BigDecimal cost) {
         this.id = id;
         this.passportNumber = passportNumber;
         this.name = name;
@@ -97,3 +96,4 @@ public class Ticket {
                '}';
     }
 }
+
