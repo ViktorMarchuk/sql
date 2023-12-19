@@ -1,5 +1,6 @@
 package com.vm.jdbc.dao;
 
+import com.vm.jdbc.dto.FlightFilter;
 import com.vm.jdbc.entity.Flight;
 import com.vm.jdbc.entity.FlightStatus;
 import com.vm.jdbc.exceptions.DaoException;
@@ -134,14 +135,54 @@ public class FlightDao implements Dao<Integer, Flight> {
     }
 
     public Flight buildFlight(ResultSet resultSet) throws SQLException {
-        return new Flight(resultSet.getInt(1),
-                resultSet.getString(2),
-                resultSet.getString(3),
-                resultSet.getInt(4),
-                resultSet.getString(5),
-                resultSet.getInt(6),
-                resultSet.getInt(7),
-                FlightStatus.valueOf(String.valueOf(resultSet.getObject(8)))
+        return new Flight(resultSet.getInt("id"),
+                resultSet.getString("flight_number"),
+                resultSet.getString("departure_date"),
+                resultSet.getInt("departure_airport_code"),
+                resultSet.getString("arrival_date"),
+                resultSet.getInt("arrival_airport_code"),
+                resultSet.getInt("aircraft_id"),
+                FlightStatus.valueOf(String.valueOf(resultSet.getObject("status")))
         );
+    }
+
+    public List<Flight> findBYFilter(FlightFilter flightFilter) {
+        List<Flight> flights = new ArrayList<>();
+        List<Object> parameters = new ArrayList<>();
+        List<String> whereSql = new ArrayList<>();
+        if (flightFilter.aircraftId() != 0) {
+            parameters.add(flightFilter.aircraftId());
+            whereSql.add("aircraft_id=?");
+        }
+        if (flightFilter.flightStatus() != null) {
+            parameters.add(flightFilter.flightStatus());
+            whereSql.add("status=?");
+        }
+        parameters.add(flightFilter.limit());
+        parameters.add(flightFilter.offset());
+        String where = whereSql.stream().collect(Collectors.joining(
+                " AND ",
+                parameters.size()>2 ?" WHERE " : "",
+                " LIMIT ? OFFSET ?"
+        ));
+        try (Connection connection = ConnectionManager.get()) {
+            String sql = SQL_FIND_ALL + where;
+            var statement = connection.prepareStatement(sql);
+            for (int i = 0; i < parameters.size(); i++) {
+                if(parameters.get(i) instanceof FlightStatus)
+                statement.setObject(i + 1, parameters.get(i),Types.OTHER);
+                else {
+                    statement.setObject(i + 1, parameters.get(i));
+                }
+            }
+            System.out.println(statement);
+            var result = statement.executeQuery();
+            while (result.next()) {
+                flights.add(buildFlight(result));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return flights;
     }
 }
