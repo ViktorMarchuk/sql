@@ -1,6 +1,8 @@
 package com.vm.jdbc.dao;
 
 import com.vm.jdbc.dto.TicketFilter;
+import com.vm.jdbc.entity.Flight;
+import com.vm.jdbc.entity.FlightStatus;
 import com.vm.jdbc.entity.Ticket;
 import com.vm.jdbc.exceptions.DaoException;
 import com.vm.jdbc.utils.ConnectionManager;
@@ -25,12 +27,20 @@ public class TicketDao implements Dao<Long, Ticket> {
             delete from ticket where id=?
             """;
     private static final String SQL_FIND_ALL = """
-            SELECT id, passport_number, name, flight_id, seat, cost 
-            FROM ticket
+            SELECT t.id, t.passport_number, t.name, t.flight_id, t.seat, t.cost,f.flight_id,f.departure_date,
+            f.departure_airport_code,f.arrival_date,f.arrival_airport_code,f.aircraft_id,f.status   
+            FROM ticket t
+            JOIN flight f on f.id=t.flight_id
             """;
     private static final String SQL_FIND_BY_ID = """
-            select  * from ticket where id=?
-            """;
+        SELECT t.id, t.passport_number, t.name, t.flight_id, t.seat, t.cost,
+        f.flight_number, f.departure_date, f.departure_airport_code,
+        f.arrival_date, f.arrival_airport_code, f.aircraft_id, f.status
+        FROM ticket t
+        JOIN flight f ON f.id = t.flight_id
+        WHERE t.id = ?
+        """;
+
     private static final String SQL_UPDATE = """
             update ticket set passport_number=?,name=?,flight_id=?,seat=?,cost=? 
             where id =?
@@ -49,7 +59,7 @@ public class TicketDao implements Dao<Long, Ticket> {
             statement.setLong(1, ticket.getId());
             statement.setString(2, ticket.getPassportNumber());
             statement.setString(3, ticket.getName());
-            statement.setLong(4, ticket.getFlightId());
+            statement.setLong(4, ticket.getFlight().getId());
             statement.setInt(5, ticket.getSeat());
             statement.setBigDecimal(6, ticket.getCost());
             statement.executeUpdate();
@@ -105,12 +115,23 @@ public class TicketDao implements Dao<Long, Ticket> {
     }
 
     private Ticket buildTicket(ResultSet result) throws SQLException {
-        return new Ticket(result.getLong(1),
-                result.getString(2),
-                result.getString(3),
-                result.getLong(4),
-                result.getInt(5),
-                result.getBigDecimal(6));
+        var flight = new Flight(result.getInt("flight_id"),
+                result.getString("flight_number"),
+                result.getString("departure_date"),
+                result.getInt("departure_airport_code"),
+                result.getString("arrival_date"),
+                result.getInt("arrival_airport_code"),
+                result.getInt("aircraft_id"),
+                FlightStatus.valueOf(String.valueOf(result.getObject("status")))
+        );
+        return new Ticket(
+                result.getLong("id"),
+                result.getString("passport_number"),
+                result.getString("name"),
+                flight,
+                result.getInt("seat"),
+                result.getBigDecimal("cost")
+        );
     }
 
     public boolean update(Ticket ticket) {
@@ -118,7 +139,7 @@ public class TicketDao implements Dao<Long, Ticket> {
             var statement = connection.prepareStatement(SQL_UPDATE);
             statement.setString(1, ticket.getPassportNumber());
             statement.setString(2, ticket.getName());
-            statement.setLong(3, ticket.getFlightId());
+            statement.setLong(3, ticket.getFlight().getId());
             statement.setInt(4, ticket.getSeat());
             statement.setBigDecimal(5, ticket.getCost());
             statement.setLong(6, ticket.getId());

@@ -2,6 +2,7 @@ package com.vm.jdbc.utils;
 
 import com.vm.jdbc.dao.FlightDao;
 import com.vm.jdbc.dao.TicketDao;
+import com.vm.jdbc.dto.FlightFilter;
 import com.vm.jdbc.dto.TicketFilter;
 import com.vm.jdbc.entity.Flight;
 import com.vm.jdbc.entity.FlightStatus;
@@ -30,8 +31,9 @@ public class JdbcNewRunner {
 //        System.out.println(flightDao.save(flight));
 //        System.out.println(flightDao.delete(259));
       //  System.out.println(flightDao.findAll());
-        System.out.println(flightDao.findById(141).get());
-
+//        System.out.println(flightDao.findById(141).get());
+//        System.out.println(flightDao.findBYFilter(new FlightFilter(0,null,6,3)));
+        System.out.println(ticketDao.findById(24L).get());
 
     }
 }

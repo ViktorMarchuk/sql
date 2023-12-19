@@ -7,18 +7,18 @@ public class Ticket {
     private Long id;
     private String passportNumber;
     private String name;
-    private Long flightId;
+    private Flight flight;
     private int seat;
     private BigDecimal cost;
 
     public Ticket() {
     }
 
-    public Ticket(Long id, String passportNumber, String name, Long flightId, int seat, BigDecimal cost) {
+    public Ticket(Long id, String passportNumber, String name, Flight flight, int seat, BigDecimal cost) {
         this.id = id;
         this.passportNumber = passportNumber;
         this.name = name;
-        this.flightId = flightId;
+        this.flight = flight;
         this.seat = seat;
         this.cost = cost;
     }
@@ -47,12 +47,12 @@ public class Ticket {
         this.name = name;
     }
 
-    public Long getFlightId() {
-        return flightId;
+    public Flight getFlight() {
+        return flight;
     }
 
-    public void setFlightId(Long flightId) {
-        this.flightId = flightId;
+    public void setFlight(Flight flight) {
+        this.flight = flight;
     }
 
     public int getSeat() {
@@ -76,12 +76,12 @@ public class Ticket {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Ticket ticket = (Ticket) o;
-        return seat == ticket.seat && Objects.equals(id, ticket.id) && Objects.equals(passportNumber, ticket.passportNumber) && Objects.equals(name, ticket.name) && Objects.equals(flightId, ticket.flightId) && Objects.equals(cost, ticket.cost);
+        return seat == ticket.seat && Objects.equals(id, ticket.id) && Objects.equals(passportNumber, ticket.passportNumber) && Objects.equals(name, ticket.name) && Objects.equals(flight, ticket.flight) && Objects.equals(cost, ticket.cost);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, passportNumber, name, flightId, seat, cost);
+        return Objects.hash(id, passportNumber, name, flight, seat, cost);
     }
 
     @Override
@@ -90,7 +90,7 @@ public class Ticket {
                "id=" + id +
                ", passportNumber='" + passportNumber + '\'' +
                ", name='" + name + '\'' +
-               ", flightId=" + flightId +
+               ", flightId=" + flight +
                ", seat=" + seat +
                ", cost=" + cost +
                '}';
