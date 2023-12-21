@@ -33,18 +33,26 @@ public class TicketDao implements Dao<Long, Ticket> {
             JOIN flight f on f.id=t.flight_id
             """;
     private static final String SQL_FIND_BY_ID = """
-        SELECT t.id, t.passport_number, t.name, t.flight_id, t.seat, t.cost,
-        f.flight_number, f.departure_date, f.departure_airport_code,
-        f.arrival_date, f.arrival_airport_code, f.aircraft_id, f.status
-        FROM ticket t
-        JOIN flight f ON f.id = t.flight_id
-        WHERE t.id = ?
-        """;
+            SELECT t.id, t.passport_number, t.name, t.flight_id, t.seat, t.cost,
+            f.flight_number, f.departure_date, f.departure_airport_code,
+            f.arrival_date, f.arrival_airport_code, f.aircraft_id, f.status
+            FROM ticket t
+            JOIN flight f ON f.id = t.flight_id
+            WHERE t.id = ?
+            """;
 
     private static final String SQL_UPDATE = """
             update ticket set passport_number=?,name=?,flight_id=?,seat=?,cost=? 
             where id =?
             """;
+    private static final String SQL_FIND_ALL_BY_FLIGHT_ID = """
+            SELECT t.id, t.passport_number, t.name, t.flight_id, t.seat, t.cost,
+                        f.flight_number, f.departure_date, f.departure_airport_code,
+                        f.arrival_date, f.arrival_airport_code, f.aircraft_id, f.status
+                        FROM flight f
+                        JOIN ticket t on f.id = t.flight_id
+                        WHERE t.flight_id=?
+                        """;
 
     private TicketDao() {
     }
@@ -184,6 +192,21 @@ public class TicketDao implements Dao<Long, Ticket> {
             }
         } catch (SQLException e) {
             throw new DaoException(e);
+        }
+        return list;
+    }
+
+    public List<Ticket> findAllByFlightId(int id) {
+        List<Ticket> list = new ArrayList<>();
+        try (Connection connection = ConnectionManager.get()) {
+            var statement=connection.prepareStatement(SQL_FIND_ALL_BY_FLIGHT_ID);
+            statement.setInt(1,id);
+            var result=statement.executeQuery();
+            while (result.next()){
+                list.add(buildTicket(result));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
         return list;
     }

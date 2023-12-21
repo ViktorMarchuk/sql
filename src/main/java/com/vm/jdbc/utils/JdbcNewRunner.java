@@ -33,7 +33,7 @@ public class JdbcNewRunner {
       //  System.out.println(flightDao.findAll());
 //        System.out.println(flightDao.findById(141).get());
 //        System.out.println(flightDao.findBYFilter(new FlightFilter(0,null,6,3)));
-        System.out.println(ticketDao.findById(24L).get());
-
+//        System.out.println(ticketDao.findById(24L).get());
+        System.out.println(ticketDao.findAllByFlightId(17));
     }
 }
