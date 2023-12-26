@@ -25,18 +25,18 @@ public class CreateUserValidator implements Validator<CreateUserDto> {
             validationResult.add(Error.of("invalid.birthday", "Birthday is invalid"));
         }
         if (Gender.find(createUserDto.getGender()).isEmpty()) {
-            validationResult.add(Error.of("invalid.birthday", "Gender is invalid"));
+            validationResult.add(Error.of("invalid.gender", "Gender is invalid"));
         }
         if (Role.find(createUserDto.getRole()).isEmpty()) {
             validationResult.add(Error.of("invalid.role", "Role is invalid"));
         }
-        if (user.getName().isEmpty()) {
+        if (createUserDto.getName().isEmpty()) {
             validationResult.add(Error.of("invalid.name", "Name is invalid"));
         }
-        if (user.getPassword().isEmpty()) {
+        if (createUserDto.getPassword().isEmpty()) {
             validationResult.add(Error.of("invalid.password", "Password is invalid"));
         }
-        if (user.getEmail().isEmpty()) {
+        if (createUserDto.getEmail().isEmpty()) {
             validationResult.add(Error.of("invalid.email", "Email is invalid"));
         }
         return validationResult;

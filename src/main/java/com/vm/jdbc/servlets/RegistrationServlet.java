@@ -15,7 +15,9 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 
-@WebServlet("/registration")
+import static com.vm.jdbc.utils.UrlPath.REGISTRATION;
+
+@WebServlet(REGISTRATION)
 public class RegistrationServlet extends HttpServlet {
     private final UserService userService = UserService.getInstance();
 
@@ -40,7 +42,8 @@ public class RegistrationServlet extends HttpServlet {
             userService.create(createUserDto);
             resp.sendRedirect("/login");
         } catch (ValidationException e) {
-            req.getAttribute("errors");
+            req.setAttribute("errors", e.getErrors());
+          //  e.printStackTrace();
             doGet(req, resp);
         }
     }
