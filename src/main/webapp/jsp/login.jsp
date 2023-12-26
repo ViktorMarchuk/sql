@@ -74,7 +74,7 @@
     </label><br>
     <label for="password">Password:
         <input type="text" name="password" id="password" value="${param.password}" required>
-        ></label><br>
+        </label><br>
     <button type="submit">Login</button>
     <a href="${pageContext.request.contextPath}/registration">
         <button type="button">Register</button>

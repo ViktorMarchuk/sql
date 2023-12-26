@@ -49,6 +49,16 @@
         button:hover {
             background-color: #45a049;
         }
+        .radio-group {
+            display: flex;
+            align-items: center; /* Выравнивание по центру */
+        }
+
+        .radio-label {
+            margin-right: 15px; /* Отступ между радиокнопкой и текстом */
+            display: flex;
+            align-items: center; /* Выравнивание по центру */
+        }
     </style>
 </head>
 <body>
@@ -59,7 +69,11 @@
 
     <label for="birthday">Date of birthday:</label>
     <input type="date" name="birthday" id="birthday">
-
+    <c:if test="${not empty requestScope.duplicateError}">
+        <div style="color:red">
+            ${requestScope.duplicateError}
+        </div>
+    </c:if>
     <label for="email">Email:</label>
     <input type="email" id="email" name="email" required>
 
@@ -73,24 +87,24 @@
     </select>
     <br>
     <br>
-    <c:forEach var="gender" items="${requestScope.genders}">
-        <label style="display: block; margin-bottom: 5px;">
-            <input type="radio" name="gender" value="${gender}" style="vertical-align: middle; margin-right: 5px;">
-                ${gender}
-        </label>
-    </c:forEach>
-
+    <div class="radio-group">
+        <c:forEach var="gender" items="${requestScope.genders}">
+            <div class="radio-label">
+                <input type="radio" name="gender" value="${gender}">
+                    ${gender}
+            </div>
+        </c:forEach>
+    </div>
     <br>
     <br>
     <button type="submit">Send</button>
 </form>
 <c:if test="${not empty requestScope.errors}">
-    <div style="collor:red">
-<c:forEach var="error" items="${requestScope.errors}">
-<span>${error.message}</span>
-</c:forEach>
+    <div style="color:red">
+        <c:forEach var="error" items="${requestScope.errors}">
+            <span>${error.message}</span>
+        </c:forEach>
     </div>
-
 </c:if>
 
 </body>

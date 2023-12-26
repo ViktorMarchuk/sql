@@ -55,8 +55,8 @@ public class UserDao implements Dao<Integer, User> {
             var statement = connection.prepareStatement(SQL_SAVE, Statement.RETURN_GENERATED_KEYS);
             statement.setObject(1, user.getName());
             statement.setObject(2, user.getBirthday());
-            statement.setObject(3, user.getPassword());
-            statement.setObject(4, user.getEmail());
+            statement.setObject(3, user.getEmail());
+            statement.setObject(4, user.getPassword());
             statement.setObject(5, user.getRole(),Types.OTHER);
             statement.setObject(6, user.getGender(),Types.OTHER);
             System.out.println("Executing SQL: " + statement);

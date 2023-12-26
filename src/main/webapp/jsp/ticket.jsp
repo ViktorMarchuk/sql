@@ -22,7 +22,7 @@
     <%--        }--%>
     <%--    %>--%>
     <c:forEach var="ticket" items="${requestScope.tick}">
-        <li>${ticket.seat()}</li>
+        <li>Place : ${ticket.seat()}</li>
     </c:forEach>
 </ul>
 </body>

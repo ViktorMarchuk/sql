@@ -20,7 +20,11 @@ public class TicketService {
     public List<TicketDto> findAllByFlightId(int flightId) {
         return ticketDao
                 .findAllByFlightId(flightId)
-                .stream().map(ticket -> new TicketDto(ticket.getId(),ticket.getFlight().getId(),ticket.getSeat(),ticket.getName()))
+                .stream().map(ticket -> new TicketDto(
+                        ticket.getId(),
+                        ticket.getFlight().getId(),
+                        ticket.getSeat(),
+                        ticket.getName()))
                 .collect(Collectors.toList());
     }
 }
