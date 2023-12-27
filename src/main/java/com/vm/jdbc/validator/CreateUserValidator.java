@@ -24,10 +24,10 @@ public class CreateUserValidator implements Validator<CreateUserDto> {
         if (!LocalDateFormatter.isValid(createUserDto.getBirthday())) {
             validationResult.add(Error.of("invalid.birthday", "Birthday is invalid"));
         }
-        if (Gender.find(createUserDto.getGender()).isEmpty()) {
+        if (Gender.find(String.valueOf(createUserDto.getGender())).isEmpty()) {
             validationResult.add(Error.of("invalid.gender", "Gender is invalid"));
         }
-        if (Role.find(createUserDto.getRole()).isEmpty()) {
+        if (Role.find(String.valueOf(createUserDto.getRole())).isEmpty()) {
             validationResult.add(Error.of("invalid.role", "Role is invalid"));
         }
         if (createUserDto.getName().isEmpty()) {
@@ -39,6 +39,9 @@ public class CreateUserValidator implements Validator<CreateUserDto> {
         if (createUserDto.getEmail().isEmpty()) {
             validationResult.add(Error.of("invalid.email", "Email is invalid"));
         }
+        System.out.println("Role value: " + createUserDto.getRole());
+        System.out.println("Role find result: " + Role.find(String.valueOf(createUserDto.getRole())));
+
         return validationResult;
     }
 }
